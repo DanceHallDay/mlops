@@ -8,9 +8,9 @@ cross_validation:
 model_params:
   iterations : 30
   verbose : 50
-  task_type : 'GPU'
+  #task_type : 'GPU'
   loss_function : 'RMSE'
-  used_ram_limit: "3gb"
+  #used_ram_limit: "3gb"
 categorical_features: [        
       #'shop_id',
       #'item_id',
