@@ -33,11 +33,16 @@ jobs:
           dvc metrics diff --show-md main > report.md
           
           # Add figure to the report
-          echo "## Plots" >> report.md
-          dvc plots diff --targets evaluations/plots/plots.csv --show-vega HEAD > vega.json
+          echo "##Train plots" >> report.md
+          dvc plots diff --targets evaluations/plots/plots_train.csv --show-vega HEAD > vega.json
           npm exec vl2png vega.json > plot.png
           cml publish --md plot.png >> report.md
           
+          echo "##Test plots" >> report.md
+          dvc plots diff --targets evaluations/plots/plots_test.csv --show-vega HEAD > vega.json
+          npm exec vl2png vega.json > plot.png
+          cml publish --md plot.png >> report.md
           
+          echo "##Feature Importances" >> report.md
           cml-publish evaluations/images/fi.png --md >> report.md
           cml-send-comment report.md
