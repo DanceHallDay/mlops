@@ -1,0 +1,33 @@
+stages:
+  preprocessing:
+    cmd: python src/preprocessing/data_preprocessing.py
+    deps:
+    - src/preprocessing/data_preprocessing.py
+    - data/item_categories.csv
+    - data/items.csv
+    - data/sales_train.csv
+    - data/shops.csv
+    - data/test.csv
+    outs:
+    - data/preprocessed/train_dataset.csv
+    - data/preprocessed/test_dataset.csv
+    params:
+    - preprocessing
+  training:
+    cmd: python src/hyperparameters.py
+    deps:
+    - src/hyperparameters.py
+    - data/preprocessed/train_dataset.csv
+    outs:
+    - evaluations/images/fi.png
+    metrics:
+      - evaluations/metrics/metrics.json:
+          cache: false
+    plots:
+      - evaluations/plots/plots_train.csv:
+          cache: false
+      - evaluations/plots/plots_test.csv:
+          cache: false
+    params:
+    - cross_validation
+    - model_params

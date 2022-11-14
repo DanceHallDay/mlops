@@ -1,0 +1,12 @@
+numpy
+scikit-learn
+neptune-client
+pandas
+typing
+optuna
+regex
+more-itertools
+PyYAML
+ipywidgets
+six
+catboost

@@ -1,0 +1,28 @@
+preprocessing:
+  add_lag_features: True
+  lags: [1, 3]
+  lag_features: ['item_price', 'item_cnt_day', 'item_revenue']
+cross_validation:
+  train_size : 24
+  test_size : 7
+model_params:
+  iterations : 30
+  verbose : 50
+  task_type : 'GPU'
+  loss_function : 'RMSE'
+  used_ram_limit: "3gb"
+categorical_features: [        
+      #'shop_id',
+      #'item_id',
+      #'item_category_id',
+      #'date_block_num',
+      #'month',
+      'item_category_id',
+      'shop_city',
+      'shop_type',
+      'item_category',
+      'item_subcategory',
+      'item_fixed_category'
+  ]
+  
+
