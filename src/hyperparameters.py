@@ -20,8 +20,8 @@ def objective(trial, X : pd.DataFrame, config : dict, train_w : float = 0.8, tes
         'eval_metric' : 'RMSE',
         #'od_type' : 'iter',
         #'od_wait' : 20,
-        'used_ram_limit': "3gb",
-        'task_type' : 'GPU'
+        #'used_ram_limit': "3gb",
+        #'task_type' : 'GPU'
     }
 
     rmse, _ = cross_validation(
