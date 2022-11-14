@@ -1,0 +1,43 @@
+name: mlops
+on: [push]
+jobs:
+  
+  run:
+    runs-on: [ubuntu-latest]
+    container: docker://dvcorg/cml-py3:latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: iterative/setup-cml@v1
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: cml_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export PYTHONPATH=$PWD 
+          #npm install -g vega-lite@v5
+          npm install --no-save canvas vega-cli vega-lite
+        
+          pip install -r requirements.txt
+          
+          dvc remote modify myremote gdrive_use_service_account true
+          dvc remote modify myremote --local \
+              gdrive_service_account_json_file_path service_account_json/service_account_key.json
+         
+          dvc pull
+          
+          dvc repro
+          echo "## Metrics" >> report.md
+          git fetch --prune
+          dvc metrics diff --show-md main > report.md
+          
+          # Add figure to the report
+          echo "## Plots" >> report.md
+          dvc plots diff --targets evaluations/plots/plots.csv --show-vega HEAD > vega.json
+          npm exec vl2png vega.json > plot.png
+          cml publish --md plot.png >> report.md
+          
+          
+          cml-publish evaluations/images/fi.png --md >> report.md
+          cml-send-comment report.md
