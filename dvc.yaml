@@ -10,7 +10,7 @@ stages:
     - data/test.csv
     outs:
     - data/preprocessed/train_dataset.csv
-    - data/preprocessed/test_dataset.csv
+    #- data/preprocessed/test_dataset.csv
     params:
     - preprocessing
   training:

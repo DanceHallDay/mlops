@@ -27,13 +27,11 @@ class Dataset(IDataset):
         if self.train:
             result_df =  result_df.drop(['item_cnt_day', 'item_price', 'item_revenue'], axis=1)
         result_df['month'] = result_df['date_block_num'].apply(lambda x : x % 12)
-        #result_df['year'] = result_df['date_block_num'].apply(lambda x : x // 12)
-        #result_df.drop(['date_block_num'], axis=1, inplace=True)
+
         result_df['date_block_num'] = result_df['date_block_num'].astype(np.int16)
         result_df['shop_id'] = result_df['shop_id'].astype(np.int16)
         result_df['item_id'] = result_df['item_id'].astype(np.int16)
         result_df['month'] = result_df['month'].astype(np.int16)
-        #result_df['year'] = result_df['year'].astype(np.int16)
         
         return result_df.fillna(0)
 
@@ -153,6 +151,8 @@ class Dataset(IDataset):
                     how='left'
                 )
                 
+
+        result_df = result_df[:df.shape[0], :]
         reduce_memory_usage(result_df)
 
         return result_df
@@ -221,7 +221,6 @@ class Dataset(IDataset):
         dataset = pd.merge(dataset, item_cat, on="item_category_id", how="inner")
         
         dataset.drop_duplicates()
-        #train_dataset.drop(['date'], axis=1, inplace=True)
             
         #delete neg values in item_price feature
         if self.train:
@@ -229,12 +228,6 @@ class Dataset(IDataset):
                 (dataset['item_price'] >= 0) & 
                 (dataset['item_cnt_day'] >= 0)
             ]
-            #dataset.drop(['date'], axis=1, inplace=True)
-        #train_dataset.loc[train_dataset['item_price'] > 0, 'item_price'].apply(np.log)
-        
-        #drop outlier
-        #for cat in tqdm_notebook(train_dataset['item_category_id'].unique()):
-            #train_dataset[train_dataset['item_category_id'] == cat] = drop_outliers(train_dataset, cat)
         
         dataset = dataset.sort_values(
             by='date_block_num',

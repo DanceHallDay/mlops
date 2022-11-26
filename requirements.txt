@@ -9,4 +9,7 @@ more-itertools
 PyYAML
 ipywidgets
 six
+dvc
+'dvc[gdrive]'
+#neptune-optuna
 catboost

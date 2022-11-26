@@ -3,49 +3,42 @@ import yaml
 import gc
 
 def data_preprocessing(
-    train_dataset_csv_path : str,
-    test_dataset_csv_path : str = None,
+    dataset_csv_path : str,
+    save_path : str,
+    train : bool,
+    date_block_num : int = None,
+    dataset_for_lag_features_csv_path : str = None,
     description_csv_path : str = None,
     *args,
     **kwargs
 ) -> None:
-    train_dataset = Dataset(
-        csv_path = train_dataset_csv_path,
-        description_files_path = description_csv_path,
-        train = True,
+    dataset = Dataset(
+        csv_path=dataset_csv_path,
+        description_files_path=description_csv_path,
+        train=train,
+        date_block_num=date_block_num
     )
 
-    test_dataset = Dataset(
-        csv_path = test_dataset_csv_path,
-        description_files_path = description_csv_path,
-        train = False,
-        date_block_num=34
-    )
+    if dataset_for_lag_features_csv_path:
+        X = dataset.get_data(
+            other_df = [
+                pd.read_csv(dataset_for_lag_features_csv_path)
+            ],
+            *args,
+            **kwargs
+        )
 
-    ID = test_dataset.get_data()['ID']
-    X = train_dataset.get_data(
-        other_df = [
-            test_dataset.get_data().drop(['ID'], axis=1)
-        ],
-        *args,
-        **kwargs
-    )
+    else:
+        X = dataset.get_data(
+            *args,
+            **kwargs
+        )
 
-    y_train = train_dataset.get_labels()
-
-    del train_dataset, test_dataset
-    gc.collect()
-
-    X_train = X[:y_train.shape[0]]
-    X_test = X[y_train.shape[0]:]
-
-    X_train.loc[:, 'item_cnt_day'] = y_train
-    reduce_memory_usage(X_train)
-    X_train.to_csv('data/preprocessed/train_dataset.csv')
-
-    reduce_memory_usage(X_test)
-    X_test.loc[:, 'ID'] = ID
-    X_test.to_csv('data/preprocessed/test_dataset.csv')
+    if train:
+        y = dataset.get_labels()
+        X.loc[:, 'item_cnt_day'] = y
+    reduce_memory_usage(X)
+    X.to_csv(save_path)
 
 
 if __name__ == '__main__':
@@ -56,10 +49,10 @@ if __name__ == '__main__':
             print(exception)
 
     data_preprocessing(
-        train_dataset_csv_path='data/sales_train.csv',
-        test_dataset_csv_path='data/test.csv',
-        description_csv_path='data/',
-        **params
+        dataset_csv_path='data/sales_train.csv',
+        save_path='data/preprocessed/train_dataset.csv',
+        train=True,
+        description_csv_path='data/'
     )
 
     

@@ -19,8 +19,8 @@ stages:
       md5: aabf81b3af9a427e897aa77f77e8b971
       size: 3182735
     - path: src/preprocessing/data_preprocessing.py
-      md5: d2237611c149db16266afe50d2c9a414
-      size: 1600
+      md5: 9926a0299bb96a52278cfe443f2df7fb
+      size: 1357
     params:
       params.yaml:
         preprocessing:
@@ -28,47 +28,43 @@ stages:
           lags:
           - 1
           - 3
+          - 6
           lag_features:
           - item_price
           - item_cnt_day
           - item_revenue
     outs:
-    - path: data/preprocessed/test_dataset.csv
-      md5: a3cba3f8868f7f5ca8d9002b927ef122
-      size: 29593796
     - path: data/preprocessed/train_dataset.csv
-      md5: 455ed5b52f307c883276f70c7248665b
-      size: 423813981
+      md5: e4add3c61845dea1567898dc7de4d4b4
+      size: 256032272
   training:
     cmd: python src/hyperparameters.py
     deps:
     - path: data/preprocessed/train_dataset.csv
-      md5: 455ed5b52f307c883276f70c7248665b
-      size: 423813981
+      md5: e4add3c61845dea1567898dc7de4d4b4
+      size: 256032272
     - path: src/hyperparameters.py
-      md5: f4d028ffbc74d1f7cea9c9f191aa0eaa
-      size: 2538
+      md5: 935ea32de065eced1096d6eb69272081
+      size: 2963
     params:
       params.yaml:
         cross_validation:
-          train_size: 24
+          train_size: 20
           test_size: 7
         model_params:
           iterations: 30
           verbose: 50
-          task_type: GPU
           loss_function: RMSE
-          used_ram_limit: 3gb
     outs:
     - path: evaluations/images/fi.png
-      md5: bc1dd0857190bcd4872c15f5d1bd980b
-      size: 36889
+      md5: 0b8058fdb9a07bb4f7fcfac59b792a29
+      size: 19330
     - path: evaluations/metrics/metrics.json
-      md5: eb7ec56c50deb6015f098990cc218e02
-      size: 57
+      md5: 1cd50a4b556e5000ea0b89760056eadb
+      size: 56
     - path: evaluations/plots/plots_test.csv
-      md5: 01bc5e8a15ab319192c044b341465c8b
-      size: 68
+      md5: f7e7c221a80d7333bdacf61c81fcb5db
+      size: 147
     - path: evaluations/plots/plots_train.csv
-      md5: 3fdf81b44212e25bd83823391c2879f3
-      size: 69
+      md5: 0933b7afc89e575a4cc3f517606ca160
+      size: 151

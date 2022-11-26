@@ -1,10 +1,11 @@
-import optuna
-import catboost as cb
-import numpy as np
+#import numpy as np
 from sklearn.metrics import mean_squared_error
 from typing import Dict
 import pandas as pd
-from src.cross_validation import *
+#import neptune.new as neptune
+#import neptune.new.integrations.optuna as optuna_utils
+import optuna
+from src.validation import *
 from preprocessing.CrossValidation import *
 
 def objective(trial, X : pd.DataFrame, config : dict, train_w : float = 0.8, test_w : float = 0.2):
@@ -35,6 +36,12 @@ def objective(trial, X : pd.DataFrame, config : dict, train_w : float = 0.8, tes
 
 
 def hyperparameters_search(train_dataset_path : str, config : dict, *args, **kwargs):
+    '''run = neptune.init(
+        project="ivankuis/klubnika-bomba",
+        api_token="eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiIxYzgyZWRkMi1jNGEzLTRjNDgtYjI3OC0xZjBkOWYwYWI3OWMifQ==",
+    )
+    neptune_callback = optuna_utils.NeptuneCallback(run)'''
+
     X = pd.read_csv(train_dataset_path)
     
     cat_features = config['categorical_features']
@@ -45,7 +52,7 @@ def hyperparameters_search(train_dataset_path : str, config : dict, *args, **kwa
         lambda trial : objective(trial, X, config, *args, **kwargs), 
         n_trials=1, 
         timeout=600,
-        #n_jobs=-1
+        #callbacks=[neptune_callback]
     )
 
     config['model_params'].update(study.best_params)
@@ -69,6 +76,8 @@ def hyperparameters_search(train_dataset_path : str, config : dict, *args, **kwa
     )
 
     save_metrics(X, rmse, feature_importances)
+
+    #run.stop()
 
 
 
