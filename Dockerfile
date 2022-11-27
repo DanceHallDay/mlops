@@ -9,14 +9,13 @@ WORKDIR /app
 
 COPY . .
 
-RUN ls -a
+#RUN ls -a
 #RUN pip install -r requirements.txt
 RUN pip install dvc
 RUN pip install 'dvc[gdrive]'
-#RUN pip install pydrive2
 
 RUN dvc remote modify myremote gdrive_use_service_account true
 RUN dvc remote modify myremote --local gdrive_service_account_json_file_path service_account_json/service_account_key.json
-#RUN dvc metrics show
 
 RUN dvc pull
+#RUN dvc repro
