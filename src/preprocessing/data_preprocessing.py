@@ -34,10 +34,12 @@ def data_preprocessing(
             **kwargs
         )
 
+
     if train:
         y = dataset.get_labels()
         X.loc[:, 'item_cnt_day'] = y
     reduce_memory_usage(X)
+    X = X.reindex(sorted(X.columns), axis=1)
     X.to_csv(save_path)
 
 
@@ -52,7 +54,8 @@ if __name__ == '__main__':
         dataset_csv_path='data/sales_train.csv',
         save_path='data/preprocessed/train_dataset.csv',
         train=True,
-        description_csv_path='data/'
+        description_csv_path='data/',
+        **params
     )
 
     

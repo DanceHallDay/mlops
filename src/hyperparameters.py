@@ -6,7 +6,7 @@ import pandas as pd
 #import neptune.new.integrations.optuna as optuna_utils
 import optuna
 from src.validation import *
-from preprocessing.CrossValidation import *
+from src.preprocessing.CrossValidation import *
 
 def objective(trial, X : pd.DataFrame, config : dict, train_w : float = 0.8, test_w : float = 0.2):
 

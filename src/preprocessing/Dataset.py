@@ -24,14 +24,17 @@ class Dataset(IDataset):
         if add_lag_features:
             result_df = self.__add_lag_features__(result_df, *args, **kwargs)
             
-        if self.train:
-            result_df =  result_df.drop(['item_cnt_day', 'item_price', 'item_revenue'], axis=1)
+        
+        result_df =  result_df.drop(['item_cnt_day', 'item_price', 'item_revenue'], axis=1)
+
         result_df['month'] = result_df['date_block_num'].apply(lambda x : x % 12)
 
         result_df['date_block_num'] = result_df['date_block_num'].astype(np.int16)
         result_df['shop_id'] = result_df['shop_id'].astype(np.int16)
         result_df['item_id'] = result_df['item_id'].astype(np.int16)
         result_df['month'] = result_df['month'].astype(np.int16)
+        
+        result_df = result_df.reindex(sorted(result_df.columns), axis=1)
         
         return result_df.fillna(0)
 
@@ -121,6 +124,10 @@ class Dataset(IDataset):
         result_df = df.copy()
         if other_df:
             result_df = pd.concat([result_df, *other_df])
+            result_df.drop(['date'], axis=1, inplace=True)
+
+        if not self.train:
+            result_df['item_revenue'] = result_df['item_price'] * result_df['item_cnt_day'] 
    
         for lag in lags:
                 df_lag = (
@@ -152,7 +159,7 @@ class Dataset(IDataset):
                 )
                 
 
-        result_df = result_df[:df.shape[0], :]
+        result_df = result_df.loc[:df.shape[0], :]
         reduce_memory_usage(result_df)
 
         return result_df

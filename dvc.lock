@@ -19,8 +19,8 @@ stages:
       md5: aabf81b3af9a427e897aa77f77e8b971
       size: 3182735
     - path: src/preprocessing/data_preprocessing.py
-      md5: 9926a0299bb96a52278cfe443f2df7fb
-      size: 1357
+      md5: 1b5edc9610e4606c1dd6de391fb79e3d
+      size: 1421
     params:
       params.yaml:
         preprocessing:
@@ -35,17 +35,17 @@ stages:
           - item_revenue
     outs:
     - path: data/preprocessed/train_dataset.csv
-      md5: e4add3c61845dea1567898dc7de4d4b4
-      size: 256032272
+      md5: 8da5d666ec27ea5bf336e141fbc69c61
+      size: 501866487
   training:
     cmd: python src/hyperparameters.py
     deps:
     - path: data/preprocessed/train_dataset.csv
-      md5: e4add3c61845dea1567898dc7de4d4b4
-      size: 256032272
+      md5: 8da5d666ec27ea5bf336e141fbc69c61
+      size: 501866487
     - path: src/hyperparameters.py
-      md5: 935ea32de065eced1096d6eb69272081
-      size: 2963
+      md5: 6ea2e8ed86f15823d45b9e1d80867b10
+      size: 2967
     params:
       params.yaml:
         cross_validation:
@@ -54,17 +54,18 @@ stages:
         model_params:
           iterations: 30
           verbose: 50
+          task_type: GPU
           loss_function: RMSE
     outs:
     - path: evaluations/images/fi.png
-      md5: 0b8058fdb9a07bb4f7fcfac59b792a29
-      size: 19330
+      md5: 3c98010bb8fda130b990a022351c99cb
+      size: 44805
     - path: evaluations/metrics/metrics.json
-      md5: 1cd50a4b556e5000ea0b89760056eadb
-      size: 56
+      md5: edc3e7626cb669e1ac155c6a72936b79
+      size: 57
     - path: evaluations/plots/plots_test.csv
-      md5: f7e7c221a80d7333bdacf61c81fcb5db
-      size: 147
+      md5: 940b75b8669b53b6a5756d1fa4c664c5
+      size: 148
     - path: evaluations/plots/plots_train.csv
-      md5: 0933b7afc89e575a4cc3f517606ca160
-      size: 151
+      md5: 160e2f1910557f1aee83cc4d435bc261
+      size: 149
