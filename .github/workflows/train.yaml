@@ -1,5 +1,5 @@
 name: mlops
-on: [push]
+on: [pull_request]
 jobs:
   
   run:
@@ -28,6 +28,7 @@ jobs:
           dvc pull
           
           dvc repro
+          dvc push
           echo "## Metrics" >> report.md
           git fetch --prune
           dvc metrics diff --show-md main > report.md
