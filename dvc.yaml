@@ -7,7 +7,7 @@ stages:
     - data/items.csv
     - data/sales_train.csv
     - data/shops.csv
-    - data/test.csv
+    #- data/test.csv
     outs:
     - data/preprocessed/train_dataset.csv
     #- data/preprocessed/test_dataset.csv
