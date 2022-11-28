@@ -1,6 +1,6 @@
 preprocessing:
   add_lag_features: True
-  lags: [1, 3, 6]
+  lags: [1, 3, 6, 12]
   lag_features: ['item_price', 'item_cnt_day', 'item_revenue']
 cross_validation:
   train_size : 20
